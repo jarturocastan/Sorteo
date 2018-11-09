@@ -18,38 +18,52 @@ contract SignIn {
 
     struct Register  {
         address account;
-        int256 tickets_amount;
+        address walletFundation;
+        int256[] numbers;
+        string amount_to_foundation;
         uint created_at;
         uint updated_at;
+        string total;
+        uint id_sorteo;
     }
 
     mapping(address => Register) registers; 
+    
+    constructor() public {
+		owner = msg.sender;
+	}
+
      
-    function register(address userAccount,int256 ticket_amount) public {
-        registers[userAccount].account = userAccount;
-        registers[userAccount].tickets_amount = ticket_amount;
-        registers[userAccount].created_at = block.timestamp;   
-        registers[userAccount].updated_at = block.timestamp; 
-        emit RegisterEvent(registers[userAccount].account, block.number, blockhash(block.number));
+    function register(address walletUser,
+    int256[] numbers, address walletFundation, 
+    string amount_to_foundation, string total) public payable onlyManagerOrOwner returns(address,address, int256[], string, uint,uint,string,uint) {
+        registers[walletUser].account = walletUser;
+        registers[walletUser].numbers = numbers;
+        registers[walletUser].walletFundation = walletFundation; 
+        registers[walletUser].created_at = block.timestamp;   
+        registers[walletUser].updated_at = block.timestamp; 
+        registers[walletUser].total = total; 
+        registers[walletUser].id_sorteo = 1; 
+        registers[walletUser].amount_to_foundation = amount_to_foundation; 
+        walletFundation.transfer(msg.value);
+        emit RegisterEvent(registers[walletUser].account, block.number, blockhash(block.number));
+        return (walletUser,walletFundation,numbers,amount_to_foundation,block.timestamp,block.timestamp,total,1);
     }
 
-    function updateTicketAmount(address userAccount,int256 ticket_amount) public {
-        registers[userAccount].tickets_amount = ticket_amount;  
-        registers[userAccount].updated_at = block.timestamp;
-        emit UpdateTicketAmountEvent(registers[userAccount].account, block.number, blockhash(block.number)); 
+    
+    function setManager(address _manager) public onlyOwner {
+        manager = _manager;
+    }
+
+    function kill() public onlyOwner {
+        selfdestruct(owner);
     }
 
     modifier onlyOwner() {
         require(owner == msg.sender); _;
     }
-    
-    modifier onlyManager() {
-        require(manager == msg.sender); _;
-    }
 
     modifier onlyManagerOrOwner() {
         require(owner == msg.sender || manager == msg.sender); _;
-    }
-    
+    }   
 }
-
