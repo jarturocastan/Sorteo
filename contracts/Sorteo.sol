@@ -4,7 +4,9 @@ import "./SignIn.sol";
 
 contract Sorteo {
     address owner;
-    address manager;
+    address manager; 
+    SignIn signIn;
+
 
     constructor(address address_contract) public {
 		owner = msg.sender;
@@ -18,8 +20,7 @@ contract Sorteo {
         uint updated_at;
         uint amount_to_transfer;
     } 
-
-    
+	
     function determinateWinners(uint id_game , string game_name, uint id_sorteo, string sorteo_name, int256[] WinnerSerie, uint ticketNumber, uint amount_to_transfer) public {
         
         
@@ -31,6 +32,10 @@ contract Sorteo {
         
     }
 
+    function setSignIn(address address_contract) {
+        signIn = SignIn(address_contract);
+    }
+    
     function kill() public onlyOwner {
         selfdestruct(owner);
     }
@@ -42,9 +47,4 @@ contract Sorteo {
     modifier onlyManagerOrOwner() {
         require(owner == msg.sender || manager == msg.sender); _;
     }   
-    
-
-
-
-
 }

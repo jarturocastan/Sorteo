@@ -81,4 +81,7 @@ contract SignIn {
     modifier onlyManagerOrOwner() {
         require(owner == msg.sender || manager == msg.sender); _;
     }   
+
 }
+
+
