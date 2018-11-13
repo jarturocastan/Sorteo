@@ -64,6 +64,7 @@ contract SignIn {
             registers[walletUser].game = Game({id_game : id_game,game_name : game_name});
             walletFundation.transfer(msg.value);
             emit RegisterEvent(registers[walletUser].account, block.number, blockhash(block.number));
+    
     }
 
     function setManager(address _manager) public onlyOwner {

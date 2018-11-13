@@ -22,7 +22,7 @@ contract Sorteo {
     } 
 	
     function determinateWinners(uint id_game , string game_name, uint id_sorteo, string sorteo_name, int256[] WinnerSerie, uint ticketNumber, uint amount_to_transfer) public {
-        
+        SignIn. 
         
     }
 
