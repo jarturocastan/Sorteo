@@ -2,66 +2,69 @@ pragma solidity 0.4.24;
 
 import "./SignIn.sol";
 
-contract Sorteo {
+contract Sorteo is SignIn{
     address owner;
     address manager; 
     SignIn signIn;
 
-
+    event WinnerEvent(
+        address userAccount,
+        uint id_game,
+        string  game_name,
+        int256 id_sorteo,
+        string sorteo_name,
+        uint256 block_number,
+        bytes32 block_hash
+    );
+    
     constructor(address address_contract) public {
 		owner = msg.sender;
         manager = msg.sender;
-        SignIn signin(address_contract);
+        signIn = SignIn(address_contract);
 	}
 
     struct WinnerSerieSelected {
-        int256[] WinnerSerie;
+        int256[] winnerSerie;
         uint created_at;
         uint updated_at;
         uint amount_to_transfer;
+        address account;
+        uint ticketNumber;
+        Sorteo sorteo;
+        Game game;
     } 
+    
 
-    mapping (uint => WinnerSerieSelected) registrated;
-	
-    // function determinateWinners(SignIn signin, uint id_game , string game_name, uint id_sorteo, string sorteo_name, int256[] WinnerSerie, uint ticketNumber, uint amount_to_transfer) public {
-    //     signin.register(walletUser) = User;
-    //     signin.register(Game.id_game) = id_game;
-    //     signin.register(Game.game_name) = game_name;
-    //     signin.register(Sorteo.id_sorteo) = id_sorteo;
-    //     signin.register(Sorteo.sorteo_name) = sorteo_name;
-    //     registrated = 
+    mapping (int256 => WinnerSerieSelected[]) public winners;
+
+
+    function determinateWinners(uint id_game , string game_name, int256 id_sorteo, string sorteo_name, int256[] winnerSerie, uint ticketNumber, uint amount_to_transfer) public payable{
         
-    // }
-
-    function determinateWinners(uint winners, uint id_game , string game_name, uint id_sorteo, string sorteo_name, int256[] WinnerSerie, uint ticketNumber, uint amount_to_transfer) public {
-         registrated[winners].WinnerSerie = WinnerSerie;
-         registrated[winners].signin.register(Game.id_game) = id_name;
-         registrated[winners].signin.register(Game.game_name) = game_name;
-         registrated[winners].signin.register(Sorteo.id_sorteo) = id_sorteo;
-         registrated[winners].signin.register(Sorteo.sorteo_name) = sorteo_name;
-         registrated[winners].signin.register(ticketNumber) = ticketNumber;
-         registrated[winners].created_at = block.timestamp;
-         registrated[winners].updated_at = block.timestamp;
-         registrated[winners].amount_to_transfer = amount_to_transfer;
-         for (var i = 0; i <= registrated.length; i++) {
-             registrated[i.amount_to_transfer] = toPay;
-             toPay = msg.value;
-             registrated[i.walletUser].transfer(msg.value);
-         }
-
-
+        address[] memory addressInSorteo = signIn.getAddressByIdSorteo(id_sorteo);
         
+        for (uint i = 0; i < addressInSorteo.length; i++) {
+           if(signIn.getGameIdByWalletUser(addressInSorteo[i]) == id_game) {
+               if(signIn.getTicketNumber(addressInSorteo[i]) == ticketNumber) {
+                   int256[] memory userNumbers = signIn.getNumberByWalletUser(addressInSorteo[i]);
+                   bool  isWinner = true;
+                   for(uint j = 0; j < winnerSerie.length; j++) {
+                       if(winnerSerie[j] != userNumbers[j]) {
+                           isWinner = false;
+                       }
+                   }
+                   
+                   if(isWinner == true) {
+                        addressInSorteo[i].transfer(amount_to_transfer);
+                        emit WinnerEvent(addressInSorteo[i],id_game,game_name,id_sorteo,sorteo_name, block.number, blockhash(block.number));
+                   }
+               }
+           }
+        }
+          
     }
 
 
-
-    // function TransferToWinnner(address walletUser) private payable {
-    //     amount_to_transfer = msg.value;
-    //     walletUser.transfer(msg.value);
-        
-    // }
-
-    function setSignIn(address address_contract) {
+    function setSignIn(address address_contract) public {
         signIn = SignIn(address_contract);
     }
     
