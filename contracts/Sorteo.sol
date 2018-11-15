@@ -33,7 +33,7 @@ contract Sorteo {
         
     // }
 
-    function determinateWinners2(uint winners, uint id_game , string game_name, uint id_sorteo, string sorteo_name, int256[] WinnerSerie, uint ticketNumber, uint amount_to_transfer) public {
+    function determinateWinners(uint winners, uint id_game , string game_name, uint id_sorteo, string sorteo_name, int256[] WinnerSerie, uint ticketNumber, uint amount_to_transfer) public {
          registrated[winners].WinnerSerie = WinnerSerie;
          registrated[winners].signin.register(Game.id_game) = id_name;
          registrated[winners].signin.register(Game.game_name) = game_name;
