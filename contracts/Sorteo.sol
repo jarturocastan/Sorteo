@@ -46,10 +46,10 @@ contract Sorteo is SignIn{
            if(signIn.getGameIdByWalletUser(addressInSorteo[i]) == id_game) {
                if(signIn.getTicketNumber(addressInSorteo[i]) == ticketNumber) {
                    int256[] memory userNumbers = signIn.getNumberByWalletUser(addressInSorteo[i]);
-                   bool  isWinner = true;
+                    bool  isWinner = false;
                    for(uint j = 0; j < winnerSerie.length; j++) {
-                       if(winnerSerie[j] != userNumbers[j]) {
-                           isWinner = false;
+                       if(winnerSerie[j] == userNumbers[j]) {
+                           isWinner = true;
                        }
                    }
                    
