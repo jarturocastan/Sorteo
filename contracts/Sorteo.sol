@@ -16,7 +16,6 @@ contract Sorteo {
 
     struct WinnerSerieSelected {
         int256[] WinnerSerie;
-        SignIn signin(address_contract);
         uint created_at;
         uint updated_at;
         uint amount_to_transfer;
@@ -48,7 +47,6 @@ contract Sorteo {
              registrated[i.amount_to_transfer] = toPay;
              toPay = msg.value;
              registrated[i.walletUser].transfer(msg.value);
-
          }
 
 
