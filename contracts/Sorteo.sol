@@ -2,10 +2,22 @@ pragma solidity 0.4.24;
 
 import "./SignIn.sol";
 
-contract Sorteo is SignIn{
+contract Sorteo {
+    
     address owner;
     address manager; 
+    
     SignIn signIn;
+    
+    struct Game {
+        int256 id_game;
+        string  game_name;
+    }
+
+    struct SorteoStruct {
+        int256 id_sorteo;
+        string sorteo_name;
+    }
 
     event WinnerEvent(
         address userAccount,
@@ -30,35 +42,48 @@ contract Sorteo is SignIn{
         uint amount_to_transfer;
         address account;
         uint ticketNumber;
-        Sorteo sorteo;
+        SorteoStruct sorteo;
         Game game;
     } 
-    
+
+
 
     mapping (int256 => WinnerSerieSelected[]) public winners;
-
-
-    function determinateWinners(uint id_game , string game_name, int256 id_sorteo, string sorteo_name, int256[] winnerSerie, uint ticketNumber, uint amount_to_transfer) public payable{
+    bool  isWinner = false;
+    WinnerSerieSelected winner;
+    uint count_numbers = 0;
+    uint y = 0;
+    
+    function determinateWinners(int256 id_game , string game_name, int256 id_sorteo, string sorteo_name, int256[] winnerSerie, uint amount_to_transfer) public payable onlyManagerOrOwner{
         
         address[] memory addressInSorteo = signIn.getAddressByIdSorteo(id_sorteo);
+        uint[] memory ticketsNumber = signIn.getTicketNumberByIdSorteo(id_sorteo);
         
-        for (uint i = 0; i < addressInSorteo.length; i++) {
-           if(signIn.getGameIdByWalletUser(addressInSorteo[i]) == id_game) {
-               if(signIn.getTicketNumber(addressInSorteo[i]) == ticketNumber) {
-                   int256[] memory userNumbers = signIn.getNumberByWalletUser(addressInSorteo[i]);
-                    bool  isWinner = false;
-                   for(uint j = 0; j < winnerSerie.length; j++) {
-                       if(winnerSerie[j] == userNumbers[j]) {
-                           isWinner = true;
+        if(addressInSorteo.length > 0) {
+            for (uint i = 0; i < addressInSorteo.length; i++) {
+               if(signIn.getGameIdByWalletUser(addressInSorteo[i],id_sorteo,id_game,ticketsNumber[i]) == id_game) {
+                       int256[] memory userNumbers = signIn.getNumberByWalletUser(addressInSorteo[i],id_sorteo,id_game,ticketsNumber[i]);
+                        for(uint j = 0; j < winnerSerie.length; j++) {
+                            while(y < userNumbers.length) {
+                                if(winnerSerie[j] == userNumbers[y]) {
+                                    count_numbers++;
+                                }
+                                y++;
+                            }
+                            y = 0;
+                        }
+                       if(count_numbers > 0) {
+                            addressInSorteo[i].transfer((amount_to_transfer * count_numbers));
+                            winner.sorteo.sorteo_name = sorteo_name;
+                            winner.game.game_name = game_name;
                        }
-                   }
+                        signIn.deleteUserBySorteoAndGame(addressInSorteo[i],id_sorteo,id_game,ticketsNumber[i]);
+                        signIn.deleteIndexMappingAddress(id_sorteo,i);
+                        signIn.delteIndexMappingTikets(id_sorteo,i);
+                       count_numbers = 0;
                    
-                   if(isWinner == true) {
-                        addressInSorteo[i].transfer(amount_to_transfer);
-                        emit WinnerEvent(addressInSorteo[i],id_game,game_name,id_sorteo,sorteo_name, block.number, blockhash(block.number));
-                   }
                }
-           }
+            }
         }
           
     }

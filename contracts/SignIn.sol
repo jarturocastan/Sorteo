@@ -17,7 +17,7 @@ contract SignIn {
     );
 
     struct Game {
-        uint id_game;
+        int256 id_game;
         string  game_name;
     }
 
@@ -38,10 +38,16 @@ contract SignIn {
         Sorteo sorteo;
         Game game;
     }
-
-    mapping(int256 => address[]) indexMapping;
     
-    mapping(address => Register) registers; 
+    struct WalletTiket {
+        uint ticketNumber;
+        address walletUser;
+    }
+
+    mapping(int256 => address[]) indexMappingAddress;
+        mapping(int256 => uint[]) indexMappingTikets;
+    mapping(int256 => mapping(int256 => mapping(uint => mapping(address => Register)))) registers;
+
     
     constructor() public {
 		owner = msg.sender;
@@ -49,21 +55,21 @@ contract SignIn {
 	}
     
     function register(address walletUser, address walletFundation,int256[] numbers, 
-        string total,uint ticketNumber,string amount_to_foundation, int256 id_sorteo, string sorteo_name,uint id_game ,string game_name) 
+        string total,uint ticketNumber,string amount_to_foundation, int256 id_sorteo, string sorteo_name,int256 id_game ,string game_name) 
         public payable onlyManagerOrOwner  {
-            indexMapping[id_sorteo].push(walletUser);            
-            registers[walletUser].account = walletUser;
-            registers[walletUser].numbers = numbers;
-            registers[walletUser].walletFundation = walletFundation; 
-            registers[walletUser].created_at = block.timestamp;   
-            registers[walletUser].updated_at = block.timestamp; 
-            registers[walletUser].total = total; 
-            registers[walletUser].amount_to_foundation = amount_to_foundation; 
-            registers[walletUser].ticketNumber = ticketNumber;
-            registers[walletUser].sorteo = Sorteo({id_sorteo : id_sorteo,  sorteo_name : sorteo_name});
-            registers[walletUser].game = Game({id_game : id_game,game_name : game_name});
+            indexMappingAddress[id_sorteo].push(walletUser);   
+            indexMappingTikets[id_sorteo].push(ticketNumber);
+            registers[id_sorteo][id_game][ticketNumber][walletUser].account = walletUser;
+            registers[id_sorteo][id_game][ticketNumber][walletUser].numbers = numbers;
+            registers[id_sorteo][id_game][ticketNumber][walletUser].walletFundation = walletFundation; 
+            registers[id_sorteo][id_game][ticketNumber][walletUser].created_at = block.timestamp;   
+            registers[id_sorteo][id_game][ticketNumber][walletUser].updated_at = block.timestamp; 
+            registers[id_sorteo][id_game][ticketNumber][walletUser].total = total; 
+            registers[id_sorteo][id_game][ticketNumber][walletUser].amount_to_foundation = amount_to_foundation; 
+            registers[id_sorteo][id_game][ticketNumber][walletUser].ticketNumber = ticketNumber;
+            registers[id_sorteo][id_game][ticketNumber][walletUser].sorteo = Sorteo({id_sorteo : id_sorteo,  sorteo_name : sorteo_name});
+            registers[id_sorteo][id_game][ticketNumber][walletUser].game = Game({id_game : id_game,game_name : game_name});
             walletFundation.transfer(msg.value);
-            emit RegisterEvent(registers[walletUser].account, block.number, blockhash(block.number));
     }
 
     function setManager(address _manager) public onlyOwner {
@@ -71,20 +77,35 @@ contract SignIn {
     }
     
     function getAddressByIdSorteo(int256 id_sorteo) public view returns (address[]) {
-        return indexMapping[id_sorteo];
+        return indexMappingAddress[id_sorteo];
     }
     
-    function getGameIdByWalletUser(address walletUser) public view returns (uint) {
-        return registers[walletUser].game.id_game;
+    function getTicketNumberByIdSorteo(int256 id_sorteo) public view returns (uint[]) {
+        return indexMappingTikets[id_sorteo];
     }
     
-    function getNumberByWalletUser(address walletUser) public view returns (int256[]){
-        return  registers[walletUser].numbers;
+    function getGameIdByWalletUser(address walletUser,int256 id_sorteo, int256 id_game, uint ticketNumber) public view returns (int256) {
+        return registers[id_sorteo][id_game][ticketNumber][walletUser].game.id_game;
     }
-
-    function getTicketNumber(address walletUser) public view returns(uint) {
-        return  registers[walletUser].ticketNumber;
+    
+    function getNumberByWalletUser(address walletUser,int256 id_sorteo,int256 id_game,uint ticketNumber) public view returns (int256[]){
+        return  registers[id_sorteo][id_game][ticketNumber][walletUser].numbers;
     }
+    
+    function deleteUserBySorteoAndGame(address walletUser, int256 id_sorteo,int256 id_game, uint ticketNumber) public  {
+        delete  registers[id_sorteo][id_game][ticketNumber][walletUser];
+    }
+    
+    
+    function deleteIndexMappingAddress(int256 id_sorteo,uint index) {
+        delete indexMappingAddress[id_sorteo][index];
+    }
+    
+    function delteIndexMappingTikets(int256 id_sorteo,uint index) {
+        delete indexMappingTikets[id_sorteo][index];
+    }
+               
+            
     
     function kill() public onlyOwner {
         selfdestruct(owner);
