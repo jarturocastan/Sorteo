@@ -236,18 +236,18 @@ contract StandardCMToken is ERCCM20 {
 //        return revenue;                                   // ends function and returns
 //    }
 
-    function sellToken(uint256 _amount) public payable {
+        function sellToken(uint256 _amount) public payable {
         if ((checker > sdate1) && (checker < edate1)) {
              if(balances[address(this)] >= _amount && _amount > 0) {
             total = _amount * priceInSzabo;
             totalValue = msg.value * 1000000;
-            extra = total / 2;
+            extra = _amount / 2;
             if(total == totalValue) {
              balances[msg.sender] = balances[msg.sender] + (_amount + extra);
             balances[address(this)] =  balances[address(this)] - (_amount + extra);
-            transfer(address(this),add_to);
+            //transfer(address(this),add_to);
             owner.transfer(msg.value);
-            transferFrom(address(this),owner,msg.value);
+            //transferFrom(address(this),owner,msg.value);
                 //transferFrom(address(this),msg.sender,add_to);
                 //address(this).transfer(msg.value);
             } else {
@@ -261,14 +261,14 @@ contract StandardCMToken is ERCCM20 {
         } else if((checker > sdate2) && (checker < edate2)) {
              if(balances[address(this)] >= _amount && _amount > 0) {
             total = _amount * 1600;
-            extra = total * 2/5;
+            extra = _amount * 2/5;
             totalValue = msg.value * 1000000;
             if(total == totalValue) {
-                balances[msg.sender] = balances[msg.sender] + (_amount + extra);
+                 balances[msg.sender] = balances[msg.sender] + (_amount + extra);
             balances[address(this)] =  balances[address(this)] - (_amount + extra);
             //transfer(address(this),add_to);
             owner.transfer(msg.value);
-                //transferFrom(address(this),owner,msg.value);
+            //transferFrom(address(this),owner,msg.value);
                 //transferFrom(address(this),msg.sender,add_to);
                 //address(this).transfer(msg.value);
             } else {
@@ -282,13 +282,13 @@ contract StandardCMToken is ERCCM20 {
             if(balances[address(this)] >= _amount && _amount > 0) {
             total = _amount * 2400;
             totalValue = msg.value * 1000000;
-            extra = total * 3/10;
+            extra = _amount * 3/10;
             if(total == totalValue) {
-                balances[msg.sender] = balances[msg.sender] + (_amount + extra);
+                 balances[msg.sender] = balances[msg.sender] + (_amount + extra);
             balances[address(this)] =  balances[address(this)] - (_amount + extra);
             //transfer(address(this),add_to);
             owner.transfer(msg.value);
-                //transferFrom(address(this),owner,msg.value);
+            //transferFrom(address(this),owner,msg.value);
                 //transferFrom(address(this),msg.sender,add_to);
                 //address(this).transfer(msg.value);
             } else {
@@ -302,13 +302,13 @@ contract StandardCMToken is ERCCM20 {
             if(balances[address(this)] >= _amount && _amount > 0) {
             total = _amount * 3500;
             totalValue = msg.value * 1000000;
-            extra = total * 1/5;
+            extra = _amount * 1/5;
             if(total == totalValue) {
-               balances[msg.sender] = balances[msg.sender] + (_amount + extra);
+                balances[msg.sender] = balances[msg.sender] + (_amount + extra);
             balances[address(this)] =  balances[address(this)] - (_amount + extra);
             //transfer(address(this),add_to);
             owner.transfer(msg.value);
-                //transferFrom(address(this),owner,msg.value);
+            //transferFrom(address(this),owner,msg.value);
                 //transferFrom(address(this),msg.sender,add_to);
                 //address(this).transfer(msg.value);
             } else {
@@ -324,11 +324,11 @@ contract StandardCMToken is ERCCM20 {
             totalValue = msg.value * 1000000;
             extra = total * 1/20;
             if(total == totalValue) {
-                balances[msg.sender] = balances[msg.sender] + (_amount + extra);
+                 balances[msg.sender] = balances[msg.sender] + (_amount + extra);
             balances[address(this)] =  balances[address(this)] - (_amount + extra);
             //transfer(address(this),add_to);
             owner.transfer(msg.value);
-                //transferFrom(address(this),owner,msg.value);
+            //transferFrom(address(this),owner,msg.value);
                 //transferFrom(address(this),msg.sender,add_to);
                 //address(this).transfer(msg.value);
                 
@@ -342,7 +342,6 @@ contract StandardCMToken is ERCCM20 {
 
         }
     }
-
    
 }
 
