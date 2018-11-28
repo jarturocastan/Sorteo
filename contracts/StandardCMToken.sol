@@ -236,7 +236,13 @@ contract StandardCMToken is ERCCM20 {
 //        return revenue;                                   // ends function and returns
 //    }
 
-        function sellToken(uint256 _amount) public payable {
+    function Time_call() public view returns (uint256){
+        return now;
+    }
+    
+    function sellToken(uint256 _amount) public payable {
+        uint256 checker = now;
+        if ((checker > sdate1) && (checker < edate1)) {
         if ((checker > sdate1) && (checker < edate1)) {
              if(balances[address(this)] >= _amount && _amount > 0) {
             total = _amount * priceInSzabo;
