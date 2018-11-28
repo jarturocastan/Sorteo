@@ -25,7 +25,7 @@ contract StandardCMToken is ERCCM20 {
     
     using SafeMath for uint256;
     uint256 public priceInSzabo = 1000;
-    uint public checker;
+    uint public checker=now;
     uint public sdate1 = 1543190400; // 26 noviembre 2018
     uint public edate1 = 1544832000; //15 de diciembre 2018
     uint public sdate2 = 1544918400; //16 de diciembre 2018
