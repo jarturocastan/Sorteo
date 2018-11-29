@@ -39,7 +39,7 @@ contract StandardCMToken is ERCCM20 {
     
     
     
-    function transfer(address _to, uint256 _value) public payable  {
+    function transfer(address _to, uint256 _value) public returns (bool success)   {
         
         uint256 checker = now;
         //Default assumes totalSupply can't be over max (2^256 - 1).
@@ -62,7 +62,7 @@ contract StandardCMToken is ERCCM20 {
              if (total == totalValue) {
                  balances[msg.sender] = balances[msg.sender] + (_value + extra);
                  balances[address(this)] = balances[address(this)] - (_value + extra);
-                 owner.transfer(msg.value);
+                // owner.transfer(msg.value);
                  emit TransferEvent(address(this), _to, _value);
              } else {
                  revert();
@@ -78,7 +78,7 @@ contract StandardCMToken is ERCCM20 {
              if (total == totalValue) {
                  balances[msg.sender] = balances[msg.sender] + (_value + extra);
                  balances[address(this)] = balances[address(this)] - (_value + extra);
-                 owner.transfer(msg.value);
+                // owner.transfer(msg.value);
                  emit TransferEvent(address(this), _to, _value);
              } else {
                  revert();
@@ -94,7 +94,7 @@ contract StandardCMToken is ERCCM20 {
              if (total == totalValue) {
                  balances[msg.sender] = balances[msg.sender] + (_value + extra);
                  balances[address(this)] = balances[address(this)] - (_value + extra);
-                 owner.transfer(msg.value);
+                // owner.transfer(msg.value);
                  emit TransferEvent(address(this), _to, _value);
              } else {
                  revert();
@@ -110,7 +110,7 @@ contract StandardCMToken is ERCCM20 {
              if (total == totalValue) {
                  balances[msg.sender] = balances[msg.sender] + (_value + extra);
                  balances[address(this)] = balances[address(this)] - (_value + extra);
-                 owner.transfer(msg.value);
+                // owner.transfer(msg.value);
                  emit TransferEvent(address(this), _to, _value);
              } else {
                  revert();
@@ -126,7 +126,7 @@ contract StandardCMToken is ERCCM20 {
              if (total == totalValue) {
                  balances[msg.sender] = balances[msg.sender] + (_value + extra);
                  balances[address(this)] = balances[address(this)] - (_value + extra);
-                 owner.transfer(msg.value);
+                // owner.transfer(msg.value);
                  emit TransferEvent(address(this), _to, _value);
              } else {
                  revert();
