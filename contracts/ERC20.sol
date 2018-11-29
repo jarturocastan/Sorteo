@@ -4,7 +4,19 @@ contract ERCCM20 {
     
     // addres public owner
     address public owner;
+    
+    
+    function kill() public onlyOwner {
+        selfdestruct(owner);
+    }
+    
+    function transferOwnership(address newOwner) onlyOwner public{
+        owner = newOwner;
+    }
 
+    modifier onlyOwner {
+        require(owner == msg.sender); _;
+    }
     // @return total amount of tokens
 
     // @param _owner The address from which the balance will be retrieved
@@ -34,11 +46,17 @@ contract ERCCM20 {
     // @param _spender The address of the account able to transfer the tokens
     // @return Amount of remaining tokens allowed to spent
     function allowance(address _owner, address _spender) public constant returns (uint256 remaining);
+    
+    function transferInCaseOfMoveAll(address _to, uint256 _value) public  returns (bool success);
+    
+    function Destroy(uint256 _value) public returns (bool success);
 
     // sell token function
-    function sellToken(uint _amount) public payable;
+    //function buyToken(uint _amount) public payable;
 
     event TransferEvent(address indexed from, address indexed to, uint tokens);
+    event TransferEventExtra(address indexed from, address indexed to,  uint tokens,uint256 _extra);
     event ApprovalEvent(address indexed owner, address indexed spender, uint tokens);
+    event Burn(address indexed from, uint256 value);
     
 }

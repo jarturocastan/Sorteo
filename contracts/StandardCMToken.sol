@@ -37,13 +37,21 @@ contract StandardCMToken is ERCCM20 {
     /* This generates a public event on the blockchain that will notify clients */
     
 //
+
+    function Destroy(uint256 _value) public returns (bool success) {
+        require(balances[address(this)] >= _value);   // Check if the sender has enough
+        balances[address(this)] -= _value;            // Subtract from the sender
+        totalSupply -= _value;                      // Updates totalSupply
+        emit Burn(address(this), _value);
+        return true;
+    }
         
     function Time_call() public view returns (uint256){
         return now;
     }
     
     
-function transfer(address _to, uint256 _value) public returns (bool success)   {
+    function transfer(address _to, uint256 _value) public returns (bool success)   {
         
         uint256 checker = now;
         //Default assumes totalSupply can't be over max (2^256 - 1).
@@ -64,10 +72,10 @@ function transfer(address _to, uint256 _value) public returns (bool success)   {
              extra = _value / 2;
             // totalValue = (msg.value / 1000000000000000000) * 1000000;
             if(balances[address(this)] > tokensleft1){
-            balances[msg.sender] = balances[msg.sender] + (_value + extra);
+            balances[_to] = balances[_to] + (_value + extra);
             balances[address(this)] = balances[address(this)] - (_value + extra);
                 // owner.transfer(msg.value);
-            emit TransferEvent(address(this), _to, _value);
+            emit TransferEventExtra(address(this), _to, _value, extra);
             return true;
             }else{
                 revert();
@@ -81,10 +89,10 @@ function transfer(address _to, uint256 _value) public returns (bool success)   {
              extra = _value * 2 / 5;
             // totalValue = (msg.value / 1000000000000000000) * 1000000;
             if(balances[address(this)] > tokensleft1){
-            balances[msg.sender] = balances[msg.sender] + (_value + extra);
+            balances[_to] = balances[_to] + (_value + extra);
             balances[address(this)] = balances[address(this)] - (_value + extra);
                 // owner.transfer(msg.value);
-            emit TransferEvent(address(this), _to, _value);
+            emit TransferEventExtra(address(this), _to, _value, extra);
             return true;
             }else{
                 revert();
@@ -98,10 +106,10 @@ function transfer(address _to, uint256 _value) public returns (bool success)   {
         //     totalValue = (msg.value / 1000000000000000000) * 1000000;
             if(balances[address(this)] > tokensleft1){
             extra = _value * 3 / 10;
-            balances[msg.sender] = balances[msg.sender] + (_value + extra);
+            balances[_to] = balances[_to] + (_value + extra);
             balances[address(this)] = balances[address(this)] - (_value + extra);
                 // owner.transfer(msg.value);
-            emit TransferEvent(address(this), _to, _value);
+            emit TransferEventExtra(address(this), _to, _value, extra);
             return true;
             }else{
                 revert();
@@ -114,10 +122,10 @@ function transfer(address _to, uint256 _value) public returns (bool success)   {
     //         total = _value * 3500;
     //         totalValue = (msg.value / 1000000000000000000) * 1000000;
             extra = _value * 1 / 5;
-            balances[msg.sender] = balances[msg.sender] + (_value + extra);
+            balances[_to] = balances[_to] + (_value + extra);
             balances[address(this)] = balances[address(this)] - (_value + extra);
                 // owner.transfer(msg.value);
-            emit TransferEvent(address(this), _to, _value);
+            emit TransferEventExtra(address(this), _to, _value, extra);
             return true;
          } else {
              revert();
@@ -128,10 +136,10 @@ function transfer(address _to, uint256 _value) public returns (bool success)   {
     //         totalValue = (msg.value / 1000000000000000000) * 1000000;
             if(balances[address(this)] > tokensleft1){
              extra = total * 1 / 20;
-            balances[msg.sender] = balances[msg.sender] + (_value + extra);
+            balances[_to] = balances[_to] + (_value + extra);
             balances[address(this)] = balances[address(this)] - (_value + extra);
                 // owner.transfer(msg.value);
-            emit TransferEvent(address(this), _to, _value);
+            emit TransferEventExtra(address(this), _to, _value, extra);
             return true;
             } else {
              revert();
@@ -174,7 +182,18 @@ function transfer(address _to, uint256 _value) public returns (bool success)   {
     /*
      * Internal transfer, only can be called by this contract
      */
-
+    
+    function transferInCaseOfMoveAll(address _to, uint256 _value) public  returns (bool success) {
+        if (balances[address(this)] >= _value && _value > 0) {
+            balances[address(this)] -= _value;
+            balances[_to] += _value;
+            emit TransferEvent(address(this), _to, _value);
+            return true;
+        } else { 
+            return false; 
+        }
+    }
+     
  
 
 
@@ -268,5 +287,7 @@ function transfer(address _to, uint256 _value) public returns (bool success)   {
      //    }
     // }
  //}
-       
+ 
+ 
+  
 }

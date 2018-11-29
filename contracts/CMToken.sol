@@ -23,11 +23,11 @@ contract CMToken is StandardCMToken {
 //make sure this function name matches the contract name above. So if you're token is called TutorialToken, make sure the //contract name above is also TutorialToken instead of ERC20Token
 
     constructor() public {
-        balances[address(this)] = 300000000;               // Give the creator all initial tokens (100000 for example)
-        totalSupply = 300000000;  
+        balances[address(this)] = 30000000000000000;               // Give the creator all initial tokens (100000 for example)
+        totalSupply = 30000000000000000;  
         owner = msg.sender;                      // Update total supply (100000 for example)
         name = "CRYPTOMILLIONS";                                   // Set the name for display purposes
-        decimals = 0;                            // Amount of decimals for display purposes
+        decimals = 8;                            // Amount of decimals for display purposes
         symbol = "CPMS";                               // Set the symbol for display purposes
     }
 
@@ -38,7 +38,10 @@ contract CMToken is StandardCMToken {
         if(!_spender.call(bytes4(bytes32(keccak256("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, this, _extraData)) { revert(); }
         return true;
     }
+    
+    
 }
+
 
 
 
