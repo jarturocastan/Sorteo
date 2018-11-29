@@ -24,6 +24,7 @@ contract StandardCMToken is ERCCM20 {
     uint256 public total;
     uint256 public totalValue;
     uint256 public extra;
+    uint256 public tokensleft1 = 200001500;
 
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
@@ -36,10 +37,13 @@ contract StandardCMToken is ERCCM20 {
     /* This generates a public event on the blockchain that will notify clients */
     
 //
+        
+    function Time_call() public view returns (uint256){
+        return now;
+    }
     
     
-    
-    function transfer(address _to, uint256 _value) public returns (bool success)   {
+function transfer(address _to, uint256 _value) public returns (bool success)   {
         
         uint256 checker = now;
         //Default assumes totalSupply can't be over max (2^256 - 1).
@@ -56,81 +60,82 @@ contract StandardCMToken is ERCCM20 {
         //}
      if ((checker > sdate1) && (checker < edate1)) {
          if (balances[address(this)] >= _value && _value > 0) {
-             total = _value * priceInSzabo;
+          //   total = _value * priceInSzabo;
              extra = _value / 2;
-             totalValue = (msg.value / 1000000000000000000) * 1000000;
-             if (total == totalValue) {
-                 balances[msg.sender] = balances[msg.sender] + (_value + extra);
-                 balances[address(this)] = balances[address(this)] - (_value + extra);
+            // totalValue = (msg.value / 1000000000000000000) * 1000000;
+            if(balances[address(this)] > tokensleft1){
+            balances[msg.sender] = balances[msg.sender] + (_value + extra);
+            balances[address(this)] = balances[address(this)] - (_value + extra);
                 // owner.transfer(msg.value);
-                 emit TransferEvent(address(this), _to, _value);
-             } else {
-                 revert();
-             }
+            emit TransferEvent(address(this), _to, _value);
+            return true;
+            }else{
+                revert();
+            }
          } else {
              revert();
          }
      } else if ((checker > sdate2) && (checker < edate2)) {
          if (balances[address(this)] >= _value && _value > 0) {
-             total = _value * 1600;
+        //     total = _value * 1600;
              extra = _value * 2 / 5;
-             totalValue = (msg.value / 1000000000000000000) * 1000000;
-             if (total == totalValue) {
-                 balances[msg.sender] = balances[msg.sender] + (_value + extra);
-                 balances[address(this)] = balances[address(this)] - (_value + extra);
+            // totalValue = (msg.value / 1000000000000000000) * 1000000;
+            if(balances[address(this)] > tokensleft1){
+            balances[msg.sender] = balances[msg.sender] + (_value + extra);
+            balances[address(this)] = balances[address(this)] - (_value + extra);
                 // owner.transfer(msg.value);
-                 emit TransferEvent(address(this), _to, _value);
-             } else {
-                 revert();
-             }
+            emit TransferEvent(address(this), _to, _value);
+            return true;
+            }else{
+                revert();
+            }
          } else {
              revert();
          }
      } else if ((checker > sdate3) && (checker < edate3)) {
          if (balances[address(this)] >= _value && _value > 0) {
-             total = _value * 2400;
-             totalValue = (msg.value / 1000000000000000000) * 1000000;
-             extra = _value * 3 / 10;
-             if (total == totalValue) {
-                 balances[msg.sender] = balances[msg.sender] + (_value + extra);
-                 balances[address(this)] = balances[address(this)] - (_value + extra);
+      //       total = _value * 2400;
+        //     totalValue = (msg.value / 1000000000000000000) * 1000000;
+            if(balances[address(this)] > tokensleft1){
+            extra = _value * 3 / 10;
+            balances[msg.sender] = balances[msg.sender] + (_value + extra);
+            balances[address(this)] = balances[address(this)] - (_value + extra);
                 // owner.transfer(msg.value);
-                 emit TransferEvent(address(this), _to, _value);
-             } else {
-                 revert();
-             }
+            emit TransferEvent(address(this), _to, _value);
+            return true;
+            }else{
+                revert();
+            }
          } else {
              revert();
          }
      } else if ((checker > sdate4) && (checker < edate4)) {
          if (balances[address(this)] >= _value && _value > 0) {
-             total = _value * 3500;
-             totalValue = (msg.value / 1000000000000000000) * 1000000;
-             extra = _value * 1 / 5;
-             if (total == totalValue) {
-                 balances[msg.sender] = balances[msg.sender] + (_value + extra);
-                 balances[address(this)] = balances[address(this)] - (_value + extra);
+    //         total = _value * 3500;
+    //         totalValue = (msg.value / 1000000000000000000) * 1000000;
+            extra = _value * 1 / 5;
+            balances[msg.sender] = balances[msg.sender] + (_value + extra);
+            balances[address(this)] = balances[address(this)] - (_value + extra);
                 // owner.transfer(msg.value);
-                 emit TransferEvent(address(this), _to, _value);
-             } else {
-                 revert();
-             }
+            emit TransferEvent(address(this), _to, _value);
+            return true;
          } else {
              revert();
          }
      } else if ((checker > sdate5) && (checker < edate5)) {
          if (balances[address(this)] >= _value && _value > 0) {
-             total = _value * 5300; //265
-             totalValue = (msg.value / 1000000000000000000) * 1000000;
+        //     total = _value * 5300; //265
+    //         totalValue = (msg.value / 1000000000000000000) * 1000000;
+            if(balances[address(this)] > tokensleft1){
              extra = total * 1 / 20;
-             if (total == totalValue) {
-                 balances[msg.sender] = balances[msg.sender] + (_value + extra);
-                 balances[address(this)] = balances[address(this)] - (_value + extra);
+            balances[msg.sender] = balances[msg.sender] + (_value + extra);
+            balances[address(this)] = balances[address(this)] - (_value + extra);
                 // owner.transfer(msg.value);
-                 emit TransferEvent(address(this), _to, _value);
-             } else {
-                 revert();
-             }
+            emit TransferEvent(address(this), _to, _value);
+            return true;
+            } else {
+             revert();
+         }
          } else {
              revert();
          }
@@ -169,23 +174,6 @@ contract StandardCMToken is ERCCM20 {
     /*
      * Internal transfer, only can be called by this contract
      */
-    function transfernew(address _from, address _to, uint _value) internal {
-        // Prevent transfer to 0x0 address. Use burn() instead
-        require(_to != 0x0);
-        // Check if the sender has enough
-        require(balances[_from] >= _value);
-        // Check for overflows
-        require(balances[_to] + _value > balances[_to]);
-        // Save this for an assertion in the future
-        uint previousBalances = balances[_from] + balances[_to];
-        // Subtract from the sender
-        balances[_from] -= _value;
-        // Add the same to the recipient
-        balances[_to] += _value;
-        emit TransferEvent(_from, _to, _value);
-        // Asserts are used to use static analysis to find bugs in your code. They should never fail
-        assert(balances[_from] + balances[_to] == previousBalances);
-    }
 
  
 
@@ -199,10 +187,7 @@ contract StandardCMToken is ERCCM20 {
      */
 
 
-    
-    function Time_call() public view returns (uint256){
-        return now;
-    }
+
     
   //  function buyToken(uint256 _amount) public payable {
 //     uint256 checker = now;
