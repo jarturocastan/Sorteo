@@ -45,9 +45,6 @@ contract StandardCMToken is ERCCM20 {
     uint256 public total;
     uint256 public totalValue;
     uint256 public extra;
-    uint public mult_dec = 10**18;
-    uint256 public add_to;
-    uint256 public sub_from;
 
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
@@ -55,15 +52,6 @@ contract StandardCMToken is ERCCM20 {
     
 // NEW ONES    
 
-
-
-
-    /* This generates a public event on the blockchain that will notify clients */
-  //  event FrozenFunds(address target, bool _frozen);
-    
-//    event Burn(address indexed from, uint256 _value);
-    
-//
      
         function transfer(address _to, uint256 _value) public  returns (bool success) {
         if (balances[msg.sender] >= _value && _value > 0) {
